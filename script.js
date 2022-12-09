@@ -1,56 +1,82 @@
-let displayNumber = document.querySelector('label#current-number')
+let displayNumber = document.querySelector('label#current-number');
 let currentNumber = '';
 let arrayNumber = [];
 
-let loop = 0
+let numbers = document.querySelector('div.numbers');
+let multiNumber = 1;
 
-let numbers = document.querySelector('div.numbers')
+
+let multiply = document.querySelector('button#multiply').addEventListener('click', () => {
+    if (currentNumber == '') {
+        multiNumber = arrayNumber;
+        displayNumber.innerHTML += 'x';
+    }
+    else {
+        arrayNumber.push(Number(currentNumber));
+        multiNumber = Number(arrayNumber.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
+        displayNumber.innerHTML += 'x';
+        currentNumber = '';
+    }
+});
 
 let add = document.querySelector('button#add').addEventListener('click', () => {
-    arrayNumber.push(Number(currentNumber));
-    currentNumber = '';
-    displayNumber.innerHTML += '+';
-    console.log(currentNumber)
-})
+    if (multiNumber>1){
+        arrayNumber = [(Number(multiNumber*currentNumber))];
+        currentNumber = '';
+        displayNumber.innerHTML += '+';
+        multiNumber = 1;
+    }
+    else {
+        arrayNumber.push(Number(currentNumber));
+        currentNumber = '';
+        displayNumber.innerHTML += '+';
+    }
+});
 
 let subtract = document.querySelector('button#subtract').addEventListener('click', () => {
-    arrayNumber.push(Number(currentNumber));
-    currentNumber = '-';
-    displayNumber.innerHTML += '-';
-    console.log(currentNumber)
-})
-
+    if (multiNumber>1){
+        arrayNumber = [(Number(multiNumber*currentNumber))];
+        currentNumber = '-';
+        displayNumber.innerHTML += '-';
+        multiNumber = 1;
+    }
+    else {
+        arrayNumber.push(Number(currentNumber));
+        currentNumber = '-';
+        displayNumber.innerHTML += '-';
+    }
+});
 
 function getNumber(n) {
     for(let i = n; i >= 0; i--) {
         let button = document.createElement('button');
-        button.setAttribute("id", i);
+        button.setAttribute("id", `n${i}`);
         numbers.appendChild(button);
-        button.innerText = i
+        button.innerText = i;
         button.addEventListener('click', () => {
-            if (!displayNumber.innerHTML.includes('+', '-', '÷', 'x') && loop >0 ) {
-                displayNumber.innerHTML = i;
-                arrayNumber = [i];
-                loop = 0;
-            }
-            else { 
-                currentNumber += i
-                displayNumber.innerHTML += i;
-            }
+            currentNumber += i;
+            displayNumber.innerHTML += i;
         })
     }
-}
+};
 
-getNumber(9)
-
-
+getNumber(9);
 
 
-let bntEquals = document.querySelector('button#equals')
+
+
+let operate = document.querySelector('button#equals')
 .addEventListener('click', () => {
-    console.log(currentNumber)
-    arrayNumber.push(Number(currentNumber));
-    currentNumber = '';
-    displayNumber.innerHTML = arrayNumber.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-    loop++
-})
+    if (multiNumber>1) {
+        displayNumber.innerHTML = multiNumber*currentNumber;
+        arrayNumber = [(Number(multiNumber*currentNumber))];
+        multiNumber = 1;
+        currentNumber = '';
+    }
+    else {
+        arrayNumber.push(Number(currentNumber));
+        currentNumber = ''
+        arrayNumber = [arrayNumber.reduce((accumulator, currentValue) => accumulator + currentValue, 0)];
+        displayNumber.innerHTML = arrayNumber.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    }
+});
